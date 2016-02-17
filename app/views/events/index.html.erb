@@ -1,0 +1,110 @@
+<h2>Welcome <%=current_user.first_name%>!
+</h2>
+
+<h4>Here are some of the events at your state:</h4>
+<% if @events_in.any? %>
+	<table class = "table">
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>State</th>
+			<th>Host</th>
+			<th>Action/Status</th>
+		</tr>
+		<%@events_in.each do |e|%>
+			<tr>
+				<td><a href="/events/<%=e.id%>"><%=e.name%></a></td>
+				<td><%=e.date%></td>
+				<td><%=e.location%></td>
+				<td><%=e.state%></td>
+				<td><%=@users.find(e.user_id).first_name%></td>
+				<td>
+					<% if !e.users_registered.include?current_user%>
+						<form action="/eventregisters" method = "post">
+							<input type="hidden" name = "authenticity_token" value = "<%form_authenticity_token%>">
+							<input type="hidden" name = "event_id" value = "<%=e.id%>">
+							<input type="submit" value = "join" class = "btn btn-info">
+						</form>
+					<%end%>
+					<% if e.users_registered.include?current_user%>
+					joining
+						<form action="/eventregisters" method = "post">
+							<input type="hidden" name = "authenticity_token" value = "<%form_authenticity_token%>">
+							<input type="hidden" name = "_method" value = "delete">
+							<input type="hidden" name = "event_id" value = "<%=e.id%>">
+
+							<input type="submit" value = "Cancel" class = "btn btn-danger">
+						</form>
+					<%end%>
+				</td>
+			</tr>
+		<%end%>
+	</table>
+<%end%>
+
+<h4>Here are some of the events on other states:</h4>
+<% if @events_out.any? %>
+	<table class = "table">
+		<tr>
+			<th>Name</th>
+			<th>Date</th>
+			<th>Location</th>
+			<th>State</th>
+			<th>Host</th>
+			<th>Action/Status</th>
+		</tr>
+		<%@events_out.each do |e|%>
+			<tr>
+				<td><a href="/events/<%=e.id%>"><%=e.name%></a></td>
+				<td><%=e.date%></td>
+				<td><%=e.location%></td>
+				<td><%=e.state%></td>
+				<td><%=@users.find(e.user_id).first_name%></td>
+				<td>
+					<% if !e.users_registered.include?current_user%>
+						<form action="/eventregisters" method = "post">
+							<input type="hidden" name = "authenticity_token" value = "<%form_authenticity_token%>">
+							<input type="hidden" name = "event_id" value = "<%=e.id%>">
+							<input type="submit" value = "join" class = "btn btn-info">
+						</form>
+					<%end%>
+					<% if e.users_registered.include?current_user%>
+					joining
+						<form action="/eventregisters" method = "post">
+							<input type="hidden" name = "authenticity_token" value = "<%form_authenticity_token%>">
+							<input type="hidden" name = "_method" value = "delete">
+							<input type="hidden" name = "event_id" value = "<%=e.id%>">
+
+							<input type="submit" value = "Cancel" class = "btn btn-danger">
+						</form>
+					<%end%>
+
+				</td>
+			</tr>
+		<%end%>
+	</table>
+<%end%>
+
+<h3>Add Event</h3>
+<form action="/events" method = "post">
+	<input type="hidden" name = "authenticity_token" value = "<%form_authenticity_token%>">
+
+	<label for="name">Name</label>
+	<input type="text" name = "name" id = "name">
+	<br>
+	<label for="date">Date</label>
+	<input type="date" name = "date" id = "date">
+	<br>
+	<label for="location">Location</label>
+	<input type="text" name = "location" id = "location">
+	<select name="state" id="state">
+			<option value="AZ">AZ</option>
+			<option value="CA">CA</option>
+			<option value="NY">NY</option>
+			<option value="IL">IL</option>
+			<option value="OH">OH</option>
+	</select>
+	<br>
+	<input type="submit" value = "Add Event">
+</form>
